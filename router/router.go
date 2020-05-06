@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/yangyouwei/element-api-demo/api"
+	"github.com/yangyouwei/element-api-demo/utils"
 )
 
 type RespMessages struct {
@@ -21,6 +22,10 @@ func InitRouter() *gin.Engine {
 	//IndexApi为一个Handler
 
 	v1:=router.Group("/api/v1")
+	// 跨域中间件
+	v1.Use(utils.CrossDomain())
+	//token 校验中间件
+	v1.Use(utils.Validate())
 	{
 		//用户管理
 

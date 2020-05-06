@@ -10,8 +10,8 @@ import (
 
 var (
 	//mysql
-	//MysqlString string = "root" + ":" + "Yang@1008" + "@tcp(" + "192.168.1.202" + ":" + "3306" + ")/" + "shop"
-	MysqlString string = "root" + ":" + "GaoPeng@123" + "@tcp(" + "192.168.2.5" + ":" + "3306" + ")/" + "yyw-shop"
+	MysqlString string = "root" + ":" + "Yang@1008" + "@tcp(" + "192.168.1.202" + ":" + "3306" + ")/" + "shop"
+	//MysqlString string = "root" + ":" + "GaoPeng@123" + "@tcp(" + "192.168.2.5" + ":" + "3306" + ")/" + "yyw-shop"
 	//mysql 连接池
 	Db *sql.DB
 	//err
