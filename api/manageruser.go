@@ -5,6 +5,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type LoginUser struct {
+	Name string `json:"name"`
+	Password string `json:"password"`
+}
+
 //{
 //"data": {
 //"id": 500,
@@ -22,7 +27,7 @@ import (
 
 //login
 func POST_Login(c *gin.Context)  {
-	
+
 }
 
 
@@ -48,7 +53,8 @@ func POST_Login(c *gin.Context)  {
 //"status": 200
 //}
 //}
-//获取用户列表
+
+//获取用户列表,分页显示
 func GET_UserList(c *gin.Context)  {
 
 }
@@ -74,7 +80,7 @@ func GET_UserList(c *gin.Context)  {
 //}
 //添加用户
 func POST_AddUser(c *gin.Context)  {
-	
+
 }
 
 //设置用户状态
@@ -93,15 +99,15 @@ func GET_SelectUserByID(c *gin.Context)  {
 
 //编辑用户信息
 func PUT_UserInfo(c *gin.Context)  {
-	
+
 }
 
 //根据id删除用户
 func DELETE_UserByID(c *gin.Context)  {
-	
+
 }
 
 //设置用户角色
 func PUT_SetUserRole(c *gin.Context)  {
-	
+
 }
