@@ -1,8 +1,10 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
 )
 
 type LoginUser struct {
@@ -27,6 +29,16 @@ type LoginUser struct {
 
 //login
 func POST_Login(c *gin.Context)  {
+	userjson, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	auser := LoginUser{}
+	err = json.Unmarshal(userjson, &auser)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 }
 
@@ -56,7 +68,7 @@ func POST_Login(c *gin.Context)  {
 
 //获取用户列表,分页显示
 func GET_UserList(c *gin.Context)  {
-
+	c.JSON(StatusOK,gin.H{"message":"获取用户列表"})
 }
 
 

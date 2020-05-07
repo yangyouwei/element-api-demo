@@ -1,8 +1,14 @@
 package utils
 
 import (
+	"crypto/sha256"
+	"crypto/rand"
+	"encoding/hex"
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"github.com/yangyouwei/element-api-demo/api"
+	"golang.org/x/crypto/pbkdf2"
+	logger "log"
 )
 
 var TokensMap = make(map[string]string)
@@ -19,7 +25,7 @@ func CrossDomain() gin.HandlerFunc {
 
 		// 放行所有OPTIONS方法，因为有的模板是要请求两次的
 		if method == "OPTIONS" {
-			c.AbortWithStatus(http.StatusNoContent)
+			c.AbortWithStatus(api.StatusNoContent)
 		}
 		// 处理请求
 		c.Next()
@@ -36,30 +42,36 @@ func Validate() gin.HandlerFunc{
 			c.Next()
 		} else {
 			c.Abort()
-			c.JSON(http.StatusUnauthorized,gin.H{"message":"身份验证失败"})
+			c.JSON(api.StatusUnauthorized,gin.H{"message":"身份验证失败"})
 		}
 	}
 }
 
-//if token == "" {
-//c.JSON(http.StatusOK,gin.H{"message":"身份验证成功"})
-//c.Next()  //该句可以省略，写出来只是表明可以进行验证下一步中间件，不写，也是内置会继续访问下一个中间件的
-//}else {
-//c.Abort()
-//c.JSON(http.StatusUnauthorized,gin.H{"message":"身份验证失败"})
-//return// return也是可以省略的，执行了abort操作，会内置在中间件defer前，return，写出来也只是解答为什么Abort()之后，还能执行返回JSON数据
-//}
-
 //jwt token验证
 func AuthToken(token string) bool {
-	if false {
+	atoken := "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjUwMCwicmlkIjowLCJpYXQiOjE1MTI1NDQyOTksImV4cCI6MTUxMjYzMDY5OX0.eGrsrvwHm-tPsO9r_pxHIQ5i5L1kX9RX444uwnRGaIM"
+	if token == atoken {
 		return true
 	}else {
 		return false
 	}
 }
 
-//生成token
+//生成jwt token
 func GenToken() string {
-	return ""
+	return "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjUwMCwicmlkIjowLCJpYXQiOjE1MTI1NDQyOTksImV4cCI6MTUxMjYzMDY5OX0.eGrsrvwHm-tPsO9r_pxHIQ5i5L1kX9RX444uwnRGaIM"
+}
+
+//密码加密
+func PasswordEncrypt(p string) string {
+	//生成随机盐
+	salt := make([]byte, 32)
+	_, err := rand.Read(salt)
+	if err != nil {
+		salt = []byte{219,152,152,26,33,17,4,26,126,174,154,135,175,53,193,26,179,14,163,28,138,88,187,138,115,224,98,253,12,215,110,1}
+		logger.Println(err)
+	}
+	//生成密文
+	dk := pbkdf2.Key([]byte(p), salt, 2, 32, sha256.New)
+	return fmt.Sprint(hex.EncodeToString(dk))
 }

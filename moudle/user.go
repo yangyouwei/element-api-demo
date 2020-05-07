@@ -1,11 +1,13 @@
 package moudle
 
 import (
-	"database/sql"
 	"fmt"
+	db "github.com/yangyouwei/element-api-demo/dblib"
 	"log"
 	"time"
 )
+
+
 type ManagerStr struct {
 	Id       int    `json:"mg_id"`
 	Rid      int    `json:"role_id"`
@@ -17,9 +19,9 @@ type ManagerStr struct {
 	State    int    `json:"mg_state"`
 }
 
-func (this *ManagerStr)Authlogin(db *sql.DB,n string) *ManagerStr {
+func (this *ManagerStr)Authlogin(n string) *ManagerStr {
 	statement := fmt.Sprintf("SELECT * FROM `sp_manager` WHERE `mg_name` = \"%s\";",n)
-	rows, err := db.Query(statement)
+	rows, err := db.Db.Query(statement)
 	if	err != nil{
 		log.Println(err)
 	}
@@ -34,10 +36,27 @@ func (this *ManagerStr)Authlogin(db *sql.DB,n string) *ManagerStr {
 	return &user
 }
 
-func (this *ManagerStr)GetMgUsers(db *sql.DB,start int,step int) *[]ManagerStr  {
+func (this *ManagerStr)AuthUser(n string,p string) bool {
+	//用户是否存在
+	if true {
+		//验证密码是否正确
+		if true {
+			log.Println("登录成功")
+			return true
+		}else {
+			log.Println("密码错误")
+			return false
+		}
+	}else {
+		log.Println("登录失败")
+		return false
+	}
+}
+
+func (this *ManagerStr)GetMgUsers(start int,step int) *[]ManagerStr  {
 	//　select * from table limit n-1,m-n;
 	statement := fmt.Sprintf("select * from sp_manager limit %v,%v;",start-1,step)
-	rows, err := db.Query(statement)
+	rows, err := db.Db.Query(statement)
 	if	err != nil{
 		log.Println(err)
 	}
@@ -55,8 +74,8 @@ func (this *ManagerStr)GetMgUsers(db *sql.DB,start int,step int) *[]ManagerStr  
 	return &users
 }
 
-func (this *ManagerStr)AddMgUser(db *sql.DB,user ManagerStr)  {
-	stmt, err := db.Prepare("INSERT INTO `sp_manager`(`mg_name`, `mg_pwd`, `mg_time`, `mg_mobile`, `mg_email`) VALUES (?,?,?,?,?)")
+func (this *ManagerStr)AddMgUser(user ManagerStr)  {
+	stmt, err := db.Db.Prepare("INSERT INTO `sp_manager`(`mg_name`, `mg_pwd`, `mg_time`, `mg_mobile`, `mg_email`) VALUES (?,?,?,?,?)")
 	if err != nil{
 		log.Println(err)
 		return
@@ -75,29 +94,29 @@ func (this *ManagerStr)AddMgUser(db *sql.DB,user ManagerStr)  {
 	log.Println(id)
 }
 
-func (this *ManagerStr)DelMgUser(db *sql.DB,userid int)  {
+func (this *ManagerStr)DelMgUser(userid int)  {
 
 }
 
-func (this *ManagerStr)UpdateMgUser(db *sql.DB,userinfo interface{})  {
+func (this *ManagerStr)UpdateMgUser(userinfo interface{})  {
 
 }
 
-func (this *ManagerStr)SelectMgUserById(db *sql.DB,id int)  {
+func (this *ManagerStr)SelectMgUserById(id int)  {
 
 }
 
-func (this *ManagerStr)SelectMgUserByName(db *sql.DB,name string)  {
+func (this *ManagerStr)SelectMgUserByName(name string)  {
 
 }
 
-func (this *ManagerStr)UpdateMgState(db *sql.DB,stat int,id int)  {
+func (this *ManagerStr)UpdateMgState(stat int,id int)  {
 
 }
 
-func CountRows(db *sql.DB,tablename string) int {
+func CountRows(tablename string) int {
 	statement := fmt.Sprintf("SELECT COUNT(*) FROM `%s`;",tablename)
-	rows, err := db.Query(statement)
+	rows, err := db.Db.Query(statement)
 	if	err != nil{
 		log.Println(err)
 	}
